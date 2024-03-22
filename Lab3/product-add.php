@@ -2,6 +2,8 @@
 require_once("product.class.php");
 require_once('category.class.php');
 
+$loi_str = ""; // Khởi tạo biến $loi_str
+
 if (isset($_POST["btnsubmit"])) {
     // Get value from form
     $productName = $_POST["txtname"];
@@ -9,22 +11,32 @@ if (isset($_POST["btnsubmit"])) {
     $price = $_POST["txtprice"];
     $quantity = $_POST["txtquantity"];
     $description = $_POST["txtdesc"];
+    // $picture = $_FILES["txtpic"];
     $picture = $_FILES["txtpic"];
 
     // Initialize the product object
     $newProduct = new Product($productName, $cateID, $price, $quantity, $description, $picture);
     
+    $loi= array();
+    $loi_str = "";
     // Save to the database
     $result = $newProduct->save();
     
     if (!$result) {
         // Error query
-        header("Location: product-add.php?status=failure");
+        // header("Location: product-add.php?status=failure");
+        foreach ($loi as $item)
+            $loi_str = $loi_str . $item . "<br/>";
     } else {
         header("Location: product-add.php?status=inserted");
     }
 }
 ?>
+
+<?php if ($loi_str != ""): ?>
+    <div class="alert-danger"><?php echo $loi_str; ?></div>
+<?php endif; ?>
+
 
 <?php require 'header.php'; ?>
 
@@ -39,7 +51,7 @@ if (isset($_GET["status"])) {
 ?>
 
 <!-- Form Add products -->
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <!-- Product's name -->
     <div class="row">
         <div class="lbltitle">
@@ -102,7 +114,8 @@ if (isset($_GET["status"])) {
             <label>Url Image</label>
         </div>
         <div class="lblinput">
-            <input type="file" name="txtpic" accept=".PNG,.GIF,.JPG,.JPGEG">
+            <!-- <input type="file" name="txtpic" accept=".PNG,.GIF,.JPG,.JPGEG"> -->
+            <input type="file" name="txtpic" accept=".png,.gif,.jpg,.jpeg">
         </div>
     </div>
 

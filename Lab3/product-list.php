@@ -1,6 +1,6 @@
 <?php
 require_once('product.class.php');
-
+//còn bị lỗi
 include_once('header.php');
 
 $prods = Product::list_product();
